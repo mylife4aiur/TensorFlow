@@ -38,7 +38,8 @@ A softmax regression has two steps:
 softmax : exponentiating its inputs and then normalizing them
 
 softmax是一种归一化的处理方法，将向量中的0，负数映射为约等于0，呈倍数的放大正数的比例，同时减小一部分的比例
-![](‪F:\TensorFlow\softmax.jpg)
+
+![](‪softmax.jpg)
 
 > The exponentiation means that one more unit of evidence increases the weight given to any hypothesis multiplnicatively. And conversely, having one less unit of evidence means that a hypothesis gets a fraction of its earlier weight. No hypothesis ever has zero or negative weight.
 
@@ -190,6 +191,17 @@ tf.argmax is an extremely useful function which gives you the index of the highe
 ```
 
 #   Experts
+
+##  Session
+
+TensorFlow relies on a highly efficient C++ backend to do its computation. The connection to this backend is called a session. The common usage for TensorFlow programs is to first create a graph and then launch it in a session.
+
+InteractiveSession class 
+允许
+
+> It allows you to interleave operations which build a computation graph with ones that run the graph. This is particularly convenient when working in interactive contexts like IPython. If you are not using an InteractiveSession, then you should build the entire computation graph before starting a session and launching the graph.
+
+
 
 
 $$x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}$$

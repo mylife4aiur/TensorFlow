@@ -1,5 +1,69 @@
 # 使用TensorFlow实现RNN     Edit by Haoyu
 
+## A Noob's Guide
+[原文链接](http://monik.in/a-noobs-guide-to-implementing-rnn-lstm-using-tensorflow/)
+
+### Task
+
+统计长度为20的二进制数中1的个数
+
+### 数据生成
+
+```python
+    import numpy as np
+    from random import shuffle
+    # 生成前2**20个20位二进制
+    train_input = ['{0:020b}'.format(i) for i in range(2**20)]
+    # 随机打乱
+    shuffle(train_input)
+    # 将字符串转化为包含int元素的list
+    train_input = [map(int,i) for i in train_input]
+
+    # 将得到的list处理成input形式
+    ti  = []
+    for i in train_input:
+        temp_list = []
+        for j in i:
+                temp_list.append([j])
+        ti.append(np.array(temp_list))
+    train_input = ti
+
+```
+
+TensorFlow 要求输入数据是一个tensor，维度为 [batch_size, sequence_length, input_dimension]， sequence_length可以理解为时间序列，input_dimension为某一个时间点上所输入数据的维度。这个task下sequence_length=20，input_dimension=1
+
+map(function, iterable, ...)
+Apply function to every item of iterable and return a list of the result
+
+### 设计模型
+LSTM cell 的定义所涉及到的参数
+
+在定义cell的时候需要定义隐藏层参数
+The value of it is it up to you, too high a value may lead to overfitting or a very low value may yield extremely poor results. 
+
+state_is_tuple: If True, accepted and returned states are 2-tuples of the c_state and m_state
+这里官方文档没有说明白， c_state代表cell state，m_state代表hidden state
+
+True:error 0.1%
+
+As many experts have put it, selecting the right parameters is more of an art than science.
+
+computation graph...
+
+RNN VS. DYNAMIC_RNN
+简单地说，just use tf.nn.dynamic_rnn
+RNN，先建立，后执行，更慢，且无法传入超过规定长度的序列
+DYNAMIC_RNN 边执行，边动态建立模型
+
+> Internally, tf.nn.rnn creates an unrolled graph for a fixed RNN length. That means, if you call tf.nn.rnn with inputs having 200 time steps you are creating a static graph with 200 RNN steps. First, graph creation is slow. Second, you’re unable to pass in longer sequences (> 200) than you’ve originally specified.
+
+> tf.nn.dynamic_rnn solves this. It uses a tf.While loop to dynamically construct the graph when it is executed. That means graph creation is faster and you can feed batches of variable size. What about performance? You may think the static rnn is faster than its dynamic counterpart because it pre-builds the graph. In my experience that’s not the case.
+
+## 官网教程
+
+
+
+
 [参考文章](http://www.wildml.com/2016/08/rnns-in-tensorflow-a-practical-guide-and-undocumented-features/)
 
 ## 使用 tf.train.SequenceExample() 进行数据处理
@@ -7,10 +71,10 @@
 
 基本的，一个Example中包含Features，Features里包含Feature（这里没s）的字典。最后，Feature里包含有一个 FloatList， 或者ByteList，或者Int64List
 
-使用tf.SequenceExample的好处是：
+推荐使用tf.SequenceExample载入数据，而不是直接用python中的array直接导入。  使用tf.SequenceExample的好处是：
 
 *   方便分布式训练，Tensorflow 内置分布式学习模块
-*   便于数据模型复用，使用者只需要将数据以SE方式导入即可
+*   便于数据模型复用，使用者只需要将数据以SequenceExample方式导入即可
 *   便于使用tensorflow内置的其他函数，比如 ```tf.parse_single_sequence_example```
 *   分离数据和模型。
 
@@ -77,6 +141,20 @@ batch padding解决了outlier的问题，因为每个等长处理是在同一个
 SIDE NOTE: BE CAREFUL WITH 0’S IN YOUR VOCABULARY/CLASSES
 
 > If you have a classification problem and your input tensors contain class IDs (0, 1, 2, …) then you need to be careful with padding. Because you are padding tensos with 0’s you may not be able to tell the difference between 0-padding and “class 0”. Whether or not this can be a problem depends on what your model does, but if you want to be safe it’s a good idea to not use “class 0” and instead start with “class 1”. (An example of where this may become a problem is in masking the loss function. More on that later).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -39,7 +39,9 @@ softmax : exponentiating its inputs and then normalizing them
 
 softmax是一种归一化的处理方法，将向量中的0，负数映射为约等于0，呈倍数的放大正数的比例，同时减小一部分的比例
 
-![](‪/softmax.jpg)
+[comment]:  (![](‪softmax.jpg))
+
+![](http://yizhen-blog.com/wp-content/uploads/2017/01/5-1.png)
 
 > The exponentiation means that one more unit of evidence increases the weight given to any hypothesis multiplnicatively. And conversely, having one less unit of evidence means that a hypothesis gets a fraction of its earlier weight. No hypothesis ever has zero or negative weight.
 
